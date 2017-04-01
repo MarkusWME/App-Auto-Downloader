@@ -753,7 +753,7 @@ namespace App_Auto_Downloader
                                 if (application.Commands.ContainsKey("LINK") && application.Commands["LINK"] == "RECURSIVE")
                                 {
                                     WriteInfo("Checking version");
-                                    if (currentVersions[application.Name] == downloadLink)
+                                    if (currentVersions[application.Name] == downloadLink && File.Exists(filePath))
                                     {
                                         WriteInfo("No update needed");
                                         return true;
@@ -990,6 +990,16 @@ namespace App_Auto_Downloader
             if (application.Commands.ContainsKey("LINK") && application.Commands["LINK"] == "RECURSIVE")
             {
                 return "";
+            }
+            if (application.Type == DownloadType.SimpleParameterDownload)
+            {
+                foreach (string value in application.RequestHeaders.Values)
+                {
+                    if (value == "LATEST")
+                    {
+                        return "";
+                    }
+                }
             }
             if (application.Commands.ContainsKey("REMOVEHASH"))
             {
