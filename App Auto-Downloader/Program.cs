@@ -179,16 +179,19 @@ namespace App_Auto_Downloader
                                     if (application.Commands.ContainsKey("REPLACE"))
                                     {
                                         string[] replacement = application.Commands["REPLACE"].Split(';');
-                                        if (replacement.Length >= 2)
+                                        for (int i = 0; i < replacement.Length; i += 2)
                                         {
-                                            if (replacement[1].StartsWith("GROUP"))
+                                            if (i + replacement.Length >= 2)
                                             {
-                                                int groupIndex = Convert.ToInt32(replacement[1].Substring(5));
-                                                downloadLink = downloadLink.Replace(replacement[0], match.Groups[groupIndex].ToString());
-                                            }
-                                            else
-                                            {
-                                                downloadLink = downloadLink.Replace(replacement[0], replacement[1]);
+                                                if (replacement[i + 1].StartsWith("GROUP"))
+                                                {
+                                                    int groupIndex = Convert.ToInt32(replacement[i + 1].Substring(5));
+                                                    downloadLink = downloadLink.Replace(replacement[i], match.Groups[groupIndex].ToString());
+                                                }
+                                                else
+                                                {
+                                                    downloadLink = downloadLink.Replace(replacement[i], replacement[i + 1]);
+                                                }
                                             }
                                         }
                                     }
@@ -527,7 +530,21 @@ namespace App_Auto_Downloader
                                                         if (inCommands)
                                                         {
                                                             int splitIndex = xmlReader.Value.IndexOf(" ");
-                                                            currentApp.Commands.Add(xmlReader.Value.Substring(0, splitIndex), xmlReader.Value.Substring(splitIndex + 1));
+                                                            if (xmlReader.Value.Substring(0, splitIndex) == "REPLACE")
+                                                            {
+                                                                if (!currentApp.Commands.ContainsKey("REPLACE"))
+                                                                {
+                                                                    currentApp.Commands.Add(xmlReader.Value.Substring(0, splitIndex), xmlReader.Value.Substring(splitIndex + 1));
+                                                                }
+                                                                else
+                                                                {
+                                                                    currentApp.Commands["REPLACE"] = currentApp.Commands["REPLACE"] + ";" + xmlReader.Value.Substring(splitIndex + 1);
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                currentApp.Commands.Add(xmlReader.Value.Substring(0, splitIndex), xmlReader.Value.Substring(splitIndex + 1));
+                                                            }
                                                         }
                                                         break;
                                                     case "Value":
