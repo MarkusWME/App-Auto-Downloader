@@ -140,6 +140,9 @@ namespace App_Auto_Downloader
                         downloadLinks.Add(application.Link);
                         break;
                     default:
+                        ServicePointManager.Expect100Continue = true;
+                        ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                        ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
                         using (WebClient webClient = new WebClient())
                         {
                             foreach (string requestHeader in application.RequestHeaders.Keys)
