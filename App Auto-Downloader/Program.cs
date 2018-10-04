@@ -21,9 +21,9 @@ namespace App_Auto_Downloader
         private static int maxRecursionDepth;
 
         private static Dictionary<string, string> currentVersions = new Dictionary<string, string>();
-        private static Regex urlRegex = new Regex("href=[\"']((https?)?([A-Za-z0-9-._~\\/?#\\[\\]@:$&'\\(\\)*+,;=%!]*))[\"']");
-        private static Regex urlUnescapedRegex = new Regex("href=((https?)?([A-Za-z0-9-._~\\/?#\\[\\]@:$&'\\(\\)*+,;=%!]*))");
-        private static Regex srcRegex = new Regex("src=[\"']((https?)?([A-Za-z0-9-._~\\/?#\\[\\]@:$&'\\(\\)*+,;=%!]*))[\"']");
+        private static Regex urlRegex = new Regex("href=[\"']((https?)?([A-Za-z0-9 -._~\\/?#\\[\\]@:$&'\\(\\)*+,;=%!]*))[\"']");
+        private static Regex urlUnescapedRegex = new Regex("href=((https?)?([A-Za-z0-9 -._~\\/?#\\[\\]@:$&'\\(\\)*+,;=%!]*))");
+        private static Regex srcRegex = new Regex("src=[\"']((https?)?([A-Za-z0-9 -._~\\/?#\\[\\]@:$&'\\(\\)*+,;=%!]*))[\"']");
 
         private enum DownloadType
         {
@@ -279,7 +279,7 @@ namespace App_Auto_Downloader
                     }
                 }
             }
-            if (downloadLinks.Count > 1 && application.Filters.Count > 0)
+            if (downloadLinks.Count > 1)
             {
                 string resultLink = "";
                 string tempLink;
