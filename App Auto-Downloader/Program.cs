@@ -21,9 +21,9 @@ namespace App_Auto_Downloader
         private static int maxRecursionDepth;
 
         private static Dictionary<string, string> currentVersions = new Dictionary<string, string>();
-        private static Regex urlRegex = new Regex("href=[\"']((https?)?([A-Za-z0-9 -._~\\/?#\\[\\]@:$&'\\(\\)*+,;=%!]*))[\"']");
-        private static Regex urlUnescapedRegex = new Regex("href=((https?)?([A-Za-z0-9 -._~\\/?#\\[\\]@:$&'\\(\\)*+,;=%!]*))");
-        private static Regex srcRegex = new Regex("src=[\"']((https?)?([A-Za-z0-9 -._~\\/?#\\[\\]@:$&'\\(\\)*+,;=%!]*))[\"']");
+        private static Regex urlRegex = new Regex("href=[\"']((https?)?([A-Za-z0-9 \\-._~\\/?#\\[\\]@:$&'\\(\\)*+,;=%!]*))[\"'][\\s\\\\>]");
+        private static Regex urlUnescapedRegex = new Regex("href=((https?)?([A-Za-z0-9 \\-._~\\/?#\\[\\]@:$&'\\(\\)*+,;=%!]*))[\\s\\\\>]");
+        private static Regex srcRegex = new Regex("src=[\"']((https?)?([A-Za-z0-9 \\-._~\\/?#\\[\\]@:$&'\\(\\)*+,;=%!]*))[\"'][\\s\\\\>]");
 
         private enum DownloadType
         {
@@ -157,7 +157,7 @@ namespace App_Auto_Downloader
                             }
                             if (matches == null || matches.Count == 0)
                             {
-                                matches = (application.Commands.ContainsKey("GET") ? new Regex(application.Commands["GET"] + "=[\"']((https?)?([A-Za-z0-9-._~\\/?#\\[\\]@:$&'\\(\\)*+,;=%!]*))[\"']") : urlRegex).Matches(html);
+                                matches = (application.Commands.ContainsKey("GET") ? new Regex(application.Commands["GET"] + "=[\"']((https?)?([A-Za-z0-9\\-._~\\/?#\\[\\]@:$&'\\(\\)*+,;=%!]*))[\"']") : urlRegex).Matches(html);
                             }
                             if (matches == null || matches.Count == 0)
                             {
@@ -489,7 +489,7 @@ namespace App_Auto_Downloader
                                                         }
                                                         else
                                                         {
-                                                            currentApp.Name = xmlReader.Value;
+                                                            currentApp.Name = xmlReader.Value.Replace("_", " ");
                                                         }
                                                         break;
                                                     case "FileFormat":
