@@ -489,7 +489,7 @@ namespace App_Auto_Downloader
                                                         }
                                                         else
                                                         {
-                                                            currentApp.Name = xmlReader.Value.Replace("_", " ");
+                                                            currentApp.Name = xmlReader.Value;
                                                         }
                                                         break;
                                                     case "FileFormat":
@@ -667,7 +667,7 @@ namespace App_Auto_Downloader
                             case XmlNodeType.Text:
                                 if (application.Length > 0)
                                 {
-                                    currentVersions.Add(application.Substring(4).Replace("_", " ").Replace("Plus", "+"), xmlReader.Value);
+                                    currentVersions.Add(application.Substring(4).Replace("Plus", "+"), xmlReader.Value);
                                 }
                                 break;
                             case XmlNodeType.EndElement:
@@ -715,9 +715,10 @@ namespace App_Auto_Downloader
 
         private static bool CheckFile(AppElement application, string downloadLink)
         {
-            if (currentVersions.ContainsKey(application.Name))
+            string currentVersionName = application.Name.Replace(" ", "_");
+            if (currentVersions.ContainsKey(currentVersionName))
             {
-                if (GetSavedLink(downloadLink, application.RemoveHash, ref application) == currentVersions[application.Name])
+                if (GetSavedLink(downloadLink, application.RemoveHash, ref application) == currentVersions[currentVersionName])
                 {
                     if ((File.Exists(Path.GetFullPath(outputDirectory) + "\\" + application.Name + "." + (application.ExtractFormat == "" ? application.Format : application.ExtractFormat))) || (application.ExtractFormat == "FOLDER" && Directory.Exists(Path.GetFullPath(outputDirectory) + "\\" + application.Name)))
                     {
